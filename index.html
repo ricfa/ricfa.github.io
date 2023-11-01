@@ -1,7 +1,94 @@
 <!DOCTYPE html>
 <html>
+<head>
+    <title>Visualizzatore di URL</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        #search-bar {
+            width: 100%;
+            height: 40px;
+            background-color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #url-input {
+            width: 70%;
+            padding: 5px;
+        }
+        #load-button {
+            padding: 5px 10px;
+            background-color: #0074D9;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        #iframe-container {
+            position: absolute;
+            top: 40px;
+            width: 100%;
+            height: calc(100% - 40px);
+        }
+        #url-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        #network-info {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 10px;
+        }
+    </style>
+</head>
 <body>
-<h1>Hello World</h1>
-<p>I'm hosted with GitHub test.</p>
+    <div id="search-bar">
+        <input type="text" id="url-input" placeholder="Inserisci un URL">
+        <button id="load-button">Carica URL</button>
+    </div>
+    <div id="iframe-container">
+        <iframe id="url-iframe"></iframe>
+    </div>
+    <div id="network-info"></div>
+    <script>
+        const urlInput = document.getElementById('url-input');
+        const loadButton = document.getElementById('load-button');
+        const urlIframe = document.getElementById('url-iframe');
+        const networkInfo = document.getElementById('network-info');
+
+        loadButton.addEventListener('click', () => {
+            const url = urlInput.value;
+            if (url) {
+                urlIframe.src = url;
+                monitorNetworkCalls();
+            }
+        });
+
+        function monitorNetworkCalls() {
+            networkInfo.innerHTML = '';
+            networkInfo.style.display = 'none';
+
+            const fetchHandler = (event) => {
+                const requestUrl = event.request.url;
+                if (requestUrl.includes('/xconv/')) {
+                    networkInfo.innerHTML = `Request URL: ${requestUrl}`;
+                    networkInfo.style.display = 'block';
+                }
+            };
+
+            if (window.fetch) {
+                window.addEventListener('fetch', fetchHandler);
+            }
+        }
+    </script>
 </body>
 </html>
