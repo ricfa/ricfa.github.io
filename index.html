@@ -79,7 +79,7 @@
 
             const fetchHandler = (event) => {
                 const requestUrl = event.request.url;
-                if (requestUrl.includes('/xconv/')) {
+                if (requestUrl.includes('xconv')) {
                     networkInfo.innerHTML = `Request URL: ${requestUrl}`;
                     networkInfo.style.display = 'block';
                 }
