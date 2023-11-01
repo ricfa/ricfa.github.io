@@ -77,17 +77,16 @@
             networkInfo.innerHTML = '';
             networkInfo.style.display = 'none';
 
-            const fetchHandler = (event) => {
-                const requestUrl = event.request.url;
-                if (requestUrl.includes('xconv')) {
-                    networkInfo.innerHTML = `Request URL: ${requestUrl}`;
-                    networkInfo.style.display = 'block';
-                }
-            };
+            const observer = new PerformanceObserver((list) => {
+                list.getEntries().forEach((entry) => {
+                    if (entry.name.includes('/xconv/')) {
+                        networkInfo.innerHTML = `Request URL: ${entry.name}`;
+                        networkInfo.style.display = 'block';
+                    }
+                });
+            });
 
-            if (window.fetch) {
-                window.addEventListener('fetch', fetchHandler);
-            }
+            observer.observe({ type: 'resource' });
         }
     </script>
 </body>
